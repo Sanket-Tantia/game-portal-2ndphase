@@ -1,0 +1,205 @@
+{%  extends 'deskapp/main.html' %}
+{% load static %}
+{% block content %}
+
+<body class="sb-nav-fixed">
+    {%  include 'deskapp/navbar.html' %}
+    <div id="layoutSidenav">
+        {%  include 'deskapp/sidebar.html' %}
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid">
+                    <div class="row form-group"></div>
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card mb-4">
+                                <div class="card-header"><strong>{{category|upper }} USER PROFILE</strong></div>
+                                <div class="card-body">
+                                    <form method="POST" action="" id="signupForm">
+                                        {% csrf_token %}
+                                        <!-- <h3 class="mt-4" style="margin: 3% 0% 3% 0%;"></h3> -->
+                                        {% if user.groups.all.0.name == 'admin' and category == 'retailer' %}
+                                        <div class="form-row">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>All Stockist</label>
+                                                    <select class="form-control" name="stockistusername"
+                                                        id="stockistusername" data-placeholder="Select stockist"
+                                                        data-allow-clear="1">
+                                                        <option></option>
+                                                        {% for i in allstockists %}
+                                                        <option>{{i}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <small class="form-text text-muted">Stockist for which retailer
+                                                        needs to be created</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group"></div>
+                                        {% endif %}
+                                        <div class="form-row">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>Full Name</label>
+                                                    <input type="text" class="form-control" name="fullname"
+                                                        id="fullname" placeholder="Enter full name of the user">
+                                                    <small class="form-text text-muted">First and last name</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>Username</label>
+                                                    <input type="text" class="form-control" name="username"
+                                                        id="username" placeholder="Enter username...">
+                                                    <small class="form-text text-muted">Unique for each user. Cannot be
+                                                        changed</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>Password</label>
+                                                    <input type="password" class="form-control" name="password1"
+                                                        id="password1" placeholder="Enter password">
+                                                    <small class="form-text text-muted">Choose a strong password</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>Confirm Password</label>
+                                                    <input type="password" class="form-control" name="password2"
+                                                        id="password2" placeholder="Confirm password">
+                                                    <small class="form-text text-muted">Its better to confirm
+                                                        once.</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="margin:2% 0 3% 0">
+                                            <h5>Contact Information</h5>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>Email address</label>
+                                                    <input type="email" class="form-control" name="email" id="email"
+                                                        placeholder="Enter email...">
+                                                    <small class="form-text text-muted">Enter a valid email
+                                                        address</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>Phone No.</label>
+                                                    <input type="number" class="form-control" name="phone" id="phone"
+                                                        placeholder="Enter phone no.">
+                                                    <small class="form-text text-muted">Ten digit phone number without
+                                                        +91</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>City</label>
+                                                    <input type="text" class="form-control" name="city" id="city"
+                                                        placeholder="Enter city">
+                                                    <small class="form-text text-muted">Place of association</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>State</label>
+                                                    <!-- <input type="text" class="form-control" name="state"
+                                                    id="state" placeholder="Select state"> -->
+                                                    <select class="form-control" name="state" id="state"
+                                                        data-placeholder="Select state" data-allow-clear="1">
+                                                        <option></option>
+                                                        <option>Andhra Pradesh</option>
+                                                        <option>Andaman and Nicobar Islands</option>
+                                                        <option>Arunachal Pradesh</option>
+                                                        <option>Assam</option>
+                                                        <option>Bihar</option>
+                                                        <option>Chandigarh</option>
+                                                        <option>Chhattisgarh</option>
+                                                        <option>Dadar and Nagar Haveli</option>
+                                                        <option>Daman and Diu</option>
+                                                        <option>Delhi</option>
+                                                        <option>Lakshadweep</option>
+                                                        <option>Puducherry</option>
+                                                        <option>Goa</option>
+                                                        <option>Gujarat</option>
+                                                        <option>Haryana</option>
+                                                        <option>Himachal Pradesh</option>
+                                                        <option>Jammu and Kashmir</option>
+                                                        <option>Jharkhand</option>
+                                                        <option>Karnataka</option>
+                                                        <option>Kerala</option>
+                                                        <option>Madhya Pradesh</option>
+                                                        <option>Maharashtra</option>
+                                                        <option>Manipur</option>
+                                                        <option>Meghalaya</option>
+                                                        <option>Mizoram</option>
+                                                        <option>Nagaland</option>
+                                                        <option>Odisha</option>
+                                                        <option>Punjab</option>
+                                                        <option>Rajasthan</option>
+                                                        <option>Sikkim</option>
+                                                        <option>Tamil Nadu</option>
+                                                        <option>Telangana</option>
+                                                        <option>Tripura</option>
+                                                        <option>Uttar Pradesh</option>
+                                                        <option>Uttarakhand</option>
+                                                        <option>West Bengal</option>
+                                                    </select>
+                                                    <small class="form-text text-muted">Select state from the list</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <a type="button" class="btn btn-secondary"
+                                                        href="{% url 'dashboard' %}">Cancel</a>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-md-1"></div> -->
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary"
+                                                        id="submit_btn">Submit</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            {%  include 'deskapp/footer.html' %}
+        </div>
+    </div>
+
+
+    
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <script src="{% static '/js/scripts.js' %}"></script>
+    <script src="{% static '/js/select2.full.min.js' %}"></script>
+    <script>
+        $('select').select2({
+            theme: 'bootstrap4',
+        });
+    </script>
+</body>
+{% endblock %}

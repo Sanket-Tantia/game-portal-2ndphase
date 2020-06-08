@@ -1,0 +1,156 @@
+{%  extends 'deskapp/main.html' %}
+{% load static %}
+{% block content %}
+
+
+<style>
+    .show{
+        display: block;
+    }
+    .hide{
+        display: none;
+    }
+</style>
+
+<body class="sb-nav-fixed">
+    {%  include 'deskapp/navbar.html' %}
+    <div id="layoutSidenav">
+        {%  include 'deskapp/sidebar.html' %}
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid">
+                    <div class="row form-group"></div>
+                    <div class="row">
+                        <div class="col-xl-12 mx-auto">
+                            <div class="card mb-4">
+                                <div class="card-header"><strong>Block/Unblock User</strong></div>
+                                <div class="card-body">
+                                    <form method="POST" action="" id="blockuserform">
+                                        {% csrf_token %}
+                                        <!-- <h3 class="mt-4" style="margin: 3% 0% 3% 0%;"></h3> -->
+                                        {% if user.groups.all.0.name == 'admin'%}
+                                        <div class="form-row">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>Select User Type</label>
+                                                    <select class="form-control" name="usertype" id="usertype" onchange = "displayUserType()"
+                                                        data-placeholder="Select User Type" data-allow-clear="1">
+                                                        <option></option>
+                                                        <option>Stockist</option>
+                                                        <option>Retailer</option>
+                                                    </select>
+                                                    <small class="form-text text-muted">You want to block stockist or
+                                                        retailer?</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row hide" id="stockistDisplay">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>All Stockist</label>
+                                                    <select class="form-control" name="stockistusername"
+                                                        id="stockistusername" data-placeholder="Select stockist"
+                                                        data-allow-clear="1">
+                                                        <option></option>
+                                                        {% for i in allstockists %}
+                                                        <option>{{i}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <small class="form-text text-muted">Select stockist which needs to
+                                                        be blocked</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <div class="form-row hide" id="retailerDisplay">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>All Retailer</label>
+                                                    <select class="form-control" name="retailerusername"
+                                                        id="retailerusername" data-placeholder="Select retailer"
+                                                        data-allow-clear="1">
+                                                        <option></option>
+                                                        {% for i in allretailers %}
+                                                        <option>{{i}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <small class="form-text text-muted">Select retailer which needs to
+                                                        be blocked</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row always hide">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>Select Status</label>
+                                                    <select class="form-control" name="status" id="status"
+                                                        data-placeholder="Select Status" data-allow-clear="1">
+                                                        <option></option>
+                                                        <option value=1>Unblock</option>
+                                                        <option value=0>Block</option>
+                                                    </select>
+                                                    <small class="form-text text-muted">Once blocked user will not be able to login</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row always hide">
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <a type="button" class="btn btn-secondary"
+                                                        href="{% url 'dashboard' %}">Cancel</a>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-md-1"></div> -->
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary"
+                                                        id="submit_btn">Update</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <script src="{% static '/js/scripts.js' %}"></script>
+    <script src="{% static '/js/select2.full.min.js' %}"></script>
+    <script>
+        $('select').select2({
+            theme: 'bootstrap4',
+        });
+
+        let user_role = "{{user.groups.all.0.name}}"
+        if(user_role == 'stockist'){
+            $("#stockistDisplay").addClass("hide");
+            $("#retailerDisplay").removeClass("hide");
+            $(".always").removeClass("hide");
+        }
+
+        let displayUserType = function(){
+            if ($("#usertype").val() == 'Stockist'){
+                $("#retailerDisplay").addClass("hide");
+                $("#stockistDisplay").removeClass("hide");
+                $(".always").removeClass("hide");
+            } else if ($("#usertype").val() == 'Retailer'){
+                $("#stockistDisplay").addClass("hide");
+                $("#retailerDisplay").removeClass("hide");
+                $(".always").removeClass("hide");
+            } else {
+                $("#stockistDisplay").addClass("hide");
+                $("#retailerDisplay").addClass("hide");
+                $(".always").addClass("hide");
+            }
+        }
+    </script>
+</body>
+
+{% endblock %}

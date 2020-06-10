@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
+from .decorators import isathenticated_user, authorized_user
 
 # messages
 from django.contrib import messages
@@ -42,6 +43,7 @@ from collections import defaultdict
 import json
 
 # Create your views here.
+@isathenticated_user
 def loginView(request):
     context = {}
 
@@ -65,6 +67,8 @@ def loginView(request):
     return render(request, 'deskapp/login.html', context)
 
 
+@login_required(login_url='login')
+@authorized_user(allowed_roles=['admin','stockist'])
 def dashboardView(request):
     context = {}
 
@@ -76,12 +80,15 @@ def dashboardView(request):
     return render(request, 'deskapp/dashboard.html', context)
 
 
+@login_required(login_url='login')
 def logoutView(request):
     logout(request)
     response = redirect('login')
     return response
 
 
+@login_required(login_url='login')
+@authorized_user(allowed_roles=['admin','stockist'])
 def createUserView(request, category):
     context = {}
     if request.user.groups.all()[0].name == 'admin' and category.lower() == 'retailer':
@@ -166,6 +173,8 @@ def createUserView(request, category):
     return render(request, 'deskapp/create_user.html', context)
 
 
+@login_required(login_url='login')
+@authorized_user(allowed_roles=['admin','stockist'])
 def userInfoView(request):
     context = {}
 
@@ -199,6 +208,8 @@ def userInfoView(request):
     return render(request, 'deskapp/user_info.html', context)
 
 
+@login_required(login_url='login')
+@authorized_user(allowed_roles=['admin','stockist'])
 def blockUserView(request):
     context = {}
 
@@ -228,6 +239,8 @@ def blockUserView(request):
     return render(request, 'deskapp/block_user.html', context)
 
 
+@login_required(login_url='login')
+@authorized_user(allowed_roles=['admin','stockist'])
 def grantTokenView(request):
     context = {}
 
@@ -282,6 +295,8 @@ def grantTokenView(request):
     return render(request, 'deskapp/grant_token.html', context)
 
 
+@login_required(login_url='login')
+@authorized_user(allowed_roles=['admin','stockist','retailer'])
 def transactionLogView(request):
     context = {}
 
@@ -345,6 +360,8 @@ def transactionLogView(request):
     return render(request, 'deskapp/transaction_log.html', context)
 
 
+@login_required(login_url='login')
+@authorized_user(allowed_roles=['admin'])
 def retailerProfileView(request):
     context = {}
 
@@ -374,6 +391,8 @@ def retailerProfileView(request):
     return render(request, 'deskapp/retailer_profile.html', context)
 
 
+@login_required(login_url='login')
+@authorized_user(allowed_roles=['retailer'])
 def gameConsoleView(request):
     context = {}
 
@@ -425,7 +444,8 @@ def gameConsoleView(request):
 
     return render(request, 'deskapp/game_console.html', context)
 
-
+@login_required(login_url='login')
+@authorized_user(allowed_roles=['admin','stockist'])
 def gameResultView(request):
     context = {}
 
@@ -458,6 +478,8 @@ def gameResultView(request):
     return render(request, 'deskapp/game_result.html', context)
 
 
+@login_required(login_url='login')
+@authorized_user(allowed_roles=['admin','stockist','retailer'])
 def gameEarningView(request):
     context = {}
 
@@ -491,6 +513,7 @@ def gameEarningView(request):
         context['granted_token'] = 0
 
     return render(request, 'deskapp/game_earning.html', context)
+
 
 # TASKS LEFT
 # Validation in all forms

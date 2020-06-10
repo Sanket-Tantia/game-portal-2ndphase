@@ -40,14 +40,15 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="d-flex justify-content-center mt-3 login_container">
+                                {% if messages %}
+                                <div class="card-footer text-center bg-danger">
                                     {% for message in messages %}
-                                    <p class="bg-red text-white" id="messages">{{message}}</p>
+                                    <div class="text-white">{{message}}</div>
+                                        <!-- <p class="bg-red text-white" id="messages">{{message}}</p> -->
                                     {% endfor %}
+                                        <!-- <div class="small"><a href="register.html">Need an account? Sign up!</a></div> -->
                                 </div>
-                                <!-- <div class="card-footer text-center">
-                                        <div class="small"><a href="register.html">Need an account? Sign up!</a></div>
-                                    </div> -->
+                                {% endif %}
                             </div>
                         </div>
                     </div>

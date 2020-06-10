@@ -75,11 +75,18 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                     Game Result
                 </a>
-                {% endif %}
                 <a class="nav-link" href="{% url 'gameearning'%}">
                     <div class="sb-nav-link-icon"><i class="fas fa-rupee-sign"></i></div>
                     Game Earning
                 </a>
+                {% endif %}
+                {% if user.groups.all.0.name == 'retailer' %}
+                <a class="nav-link" href="{% url 'gameearning'%}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-history"></i></div>
+                    Game Result History
+                </a>
+                {% endif %}
+                
                 <!-- <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="false" aria-controls="collapsePages">
                     <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>

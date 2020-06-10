@@ -21,43 +21,45 @@
                                 href="https://datatables.net/">official DataTables documentation</a>.</div>
                     </div> -->
                     <div class="card mb-4">
-                        <div class="card-header"><i class="fas fa-table mr-1"></i>User Information</div>
+                        <div class="card-header"><i class="fas fa-table mr-1"></i>Game Result History</div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered" id="userinfoDT" width="100%" cellspacing="0">
+                                <table class="table table-striped table-bordered" id="gameEarningDT" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>Username</th>
-                                            <th>Full Name</th>
-                                            <th>Email</th>
                                             <th>User Type</th>
-                                            <th>Token Balance</th>
-                                            <th>WinX</th>
-                                            <th>Probability</th>
-                                            <th>Last Login</th>
-                                            <th>Status</th>
-                                            <th>Date Joined</th>
-                                            <th>Phone No.</th>
-                                            <th>City</th>
-                                            <th>State</th>
+                                            <th>Tokens Playing For</th>
+                                            <th>Tokens Won</th>
+                                            <th>Tokens Reamining</th>
+                                            <th>Won on number</th>
+                                            <th>Is Jackpot</th>
+                                            {% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'stockist'%}
+                                            <th>Commission</th>
+                                            <th>Net Pay</th>
+                                            {% endif %}
+                                            <th>Transaction Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for each_user in all_users %}
+                                        {% for each_game in all_game_earning %}
                                         <tr>
-                                            <td>{{each_user.username}}</td>
-                                            <td>{{each_user.fullname}}</td>
-                                            <td>{{each_user.email}}</td>
-                                            <td>{{each_user.category | title}}</td>
-                                            <td>{{each_user.balance}}</td>
-                                            <td>{{each_user.winx}}</td>
-                                            <td>{{each_user.probability}}</td>
-                                            <td>{{each_user.last_login}}</td>
-                                            <td>{{each_user.status}}</td>
-                                            <td>{{each_user.date_joined}}</td>
-                                            <td>{{each_user.phone}}</td>
-                                            <td>{{each_user.city}}</td>
-                                            <td>{{each_user.state}}</td>
+                                            <td>{{each_game.username}}</td>
+                                            <td>Retailer</td>
+                                            <td>{{each_game.tokens_playing_for}}</td>
+                                            <td>{{each_game.tokens_won}}</td>
+                                            <td>{{each_game.tokens_remaining}}</td>
+                                            {% if each_value.won_on_number == -90 %}
+                                            <td>--</td>
+                                            {% else %}
+                                            <td>{{each_game.won_on_number}}</td>
+                                            {% endif %}
+                                            <td>{{each_game.is_jackpot}}</td>
+                                            {% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'stockist'%}
+                                            <td>{{each_game.commission}}</td>
+                                            <td>{{each_game.net_pay}}</td>
+                                            {% endif %}
+                                            <td>{{each_game.transaction_date}}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -80,7 +82,7 @@
     <script>
         // Call the dataTables jQuery plugin
         $(document).ready(function() {
-            $('#userinfoDT').DataTable();
+            $('#gameEarningDT').DataTable();
         });
     </script>
 </body>

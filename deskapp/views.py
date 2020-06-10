@@ -11,6 +11,9 @@ from django.contrib import messages
 # redirect after form submit
 from django.http import HttpResponseRedirect
 
+# query functions
+from django.db.models import Count, Q, Sum
+
 # forms
 from .forms import  (
     CreateUserForm,
@@ -29,7 +32,8 @@ from .models import (
     TransactionLog,
     AvailableToken,
     TokenPlayLog,
-    GrantedToken
+    GrantedToken,
+    GameRound
 )
 
 # default libs
@@ -180,7 +184,7 @@ def userInfoView(request):
             'category': user.username.groups.all()[0].name,
             'balance': AvailableToken.objects.get(pk=user.username.id).token_amount,
             'winx': user.winx if user.winx else '--',
-            'payout': f"{user.payout}%" if user.payout else '--',
+            'probability': f"{user.probability}%" if user.probability else '--',
             'last_login': user.username.last_login.strftime("%b %d, %Y") if user.username.last_login else None,
             'status': 'Blocked' if user.username.is_active == 0 else "Active",
             'date_joined': user.username.date_joined.strftime("%b %d, %Y"),
@@ -351,7 +355,7 @@ def retailerProfileView(request):
             username=User.objects.get(username=request.POST.get('retailerusername')).id
         )
 
-        profile_obj.payout = request.POST.get('payout')
+        profile_obj.probability = request.POST.get('probability')
         profile_obj.winx = request.POST.get('winx')
 
         profile_obj.save()
@@ -420,3 +424,76 @@ def gameConsoleView(request):
         context['granted_token'] = 0
 
     return render(request, 'deskapp/game_console.html', context)
+
+
+def gameResultView(request):
+    context = {}
+
+    # queryset = GameRound.objects.all().order_by('username')
+    retailers_game_history = {}
+    if request.user.groups.all()[0].name == 'admin':
+        queryset = GameRound.objects.values('username').annotate(
+            gamesplayed=Count('pk'),
+            gameswon=Count('pk', filter=Q(tokens_won__gt=0)),
+            tokenswon=Sum('tokens_won', filter=Q(tokens_won__gt=0))
+        )
+    else:
+        myretailers = [i.retailer_id.id for i in RetailerMapping.objects.filter(stockist_id=request.user.id)]
+        queryset = GameRound.objects.values('username').filter(username__in=myretailers).annotate(
+            gamesplayed=Count('pk'),
+            gameswon=Count('pk', filter=Q(tokens_won__gt=0)),
+            tokenswon=Sum('tokens_won', filter=Q(tokens_won__gt=0))
+        )
+
+    for row in queryset:
+        user_id = row['username']
+        username = User.objects.get(pk=user_id).username
+        row['balance'] = AvailableToken.objects.get(pk=user_id).token_amount
+        row['margin'] = "{:.2f}%".format(100*row['gameswon']/row['gamesplayed'])
+
+        retailers_game_history[username] = row
+
+    context['retailers_game_history'] = retailers_game_history
+
+    return render(request, 'deskapp/game_result.html', context)
+
+
+def gameEarningView(request):
+    context = {}
+
+    all_game_earning = []
+
+    if request.user.groups.all()[0].name == 'admin':
+        queryset = GameRound.objects.all()
+    elif request.user.groups.all()[0].name == 'stockist':
+        myretailers = [i.retailer_id.id for i in RetailerMapping.objects.filter(stockist_id=request.user.id)]
+        queryset = GameRound.objects.filter(username__in=myretailers)
+    else:
+        queryset = GameRound.objects.filter(username=request.user.id)
+
+    for each_game in queryset:
+        all_game_earning.append({
+            'username': each_game.username.username,
+            'tokens_playing_for': each_game.tokens_playing_for,
+            'tokens_won': each_game.tokens_won,
+            'tokens_remaining': each_game.tokens_remaining,
+            'won_on_number': each_game.won_on_number,
+            'is_jackpot': each_game.is_jackpot,
+            'transaction_date': each_game.created_date.strftime("%b %d, %Y"),
+            'commission': each_game.tokens_playing_for * 0.05,
+            'net_pay': each_game.tokens_playing_for * .95 - each_game.tokens_won
+        })
+    context['all_game_earning'] = all_game_earning
+
+    try:
+        context['granted_token'] = GrantedToken.objects.get(pk=request.session._session_key).token_amount
+    except GrantedToken.DoesNotExist:
+        context['granted_token'] = 0
+
+    return render(request, 'deskapp/game_earning.html', context)
+
+# TASKS LEFT
+# Validation in all forms
+# Add one account report
+# Logout credit back with remarks
+# seleect related when getting my retailer

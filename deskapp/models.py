@@ -11,7 +11,7 @@ class Profile(models.Model):
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=255)
     winx = models.IntegerField(blank=True, null=True)
-    payout = models.IntegerField(blank=True, null=True)
+    probability = models.IntegerField(blank=True, null=True)
 
     class Meta:
         default_related_name = 'profile'

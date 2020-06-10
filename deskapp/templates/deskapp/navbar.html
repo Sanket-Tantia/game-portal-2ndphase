@@ -1,5 +1,5 @@
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <a class="navbar-brand">Star Games</a>
+    <a class="navbar-brand"><i class="fas fa-dice"></i> Game Portal</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#">
         <i class="fas fa-bars"></i>
     </button>
@@ -15,7 +15,7 @@
         </div> -->
     </form>
     {% if user.groups.all.0.name == 'retailer' %}
-    <div class="navbar-text">Tokens available to play : {{granted_token}}</div>
+    <div class="navbar-text">Tokens granted to play : {{granted_token}}</div>
     {% endif %}
     <div class="navbar-text">Welcome, {{request.user}}</div>
     

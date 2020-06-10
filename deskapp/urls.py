@@ -9,6 +9,8 @@ from .views import (
     transactionLogView,
     retailerProfileView,
     gameConsoleView,
+    gameResultView,
+    gameEarningView,
     logoutView
 )
 
@@ -23,5 +25,7 @@ urlpatterns = [
     path('transactionlog', transactionLogView, name='transactionlog'),
     path('rtlprofile', retailerProfileView, name='rtlprofile'),
     path('gameconsole', gameConsoleView, name='gameconsole'),
+    path('gameresult', gameResultView, name='gameresult'),
+    path('gameearning', gameEarningView, name='gameearning'),
     path('logout', logoutView, name='logout')
 ]

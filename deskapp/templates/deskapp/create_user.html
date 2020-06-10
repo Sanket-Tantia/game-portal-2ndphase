@@ -192,13 +192,59 @@
 
     
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"crossorigin="anonymous"></script>
     <script src="{% static '/js/scripts.js' %}"></script>
     <script src="{% static '/js/select2.full.min.js' %}"></script>
     <script>
         $('select').select2({
             theme: 'bootstrap4',
+        });
+        $().ready(function() {
+
+            $("#signupForm").validate({
+                rules: {
+                    name: "required",
+                    username: {
+                        required: true,
+                        minlength: 2
+                    },
+                    password1: {
+                        required: true
+                    },
+                    password2: {
+                        required: true,
+                        equalTo: "#password1"
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    probability: {
+                        digits: true,
+                        min: 1,
+                        max:100
+                    },
+                    token_amount: {
+                        digits: true,
+                        min: 0
+                    }
+                },
+                messages: {
+                    name: "Please enter your fullname",
+                    username: {
+                        required: "Please enter a username",
+                        minlength: "Your username must consist of at least 2 characters"
+                    },
+                    password1: {
+                        required: "Please provide a password"
+                    },
+                    password2: {
+                        required: "Please provide a password",
+                        equalTo: "Please enter the same password as above"
+                    },
+                    email: "Please enter a valid email address",
+                }
+            });
         });
     </script>
 </body>

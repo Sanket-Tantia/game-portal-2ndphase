@@ -56,7 +56,7 @@
                 <div class="sb-sidenav-menu-heading">Games</div>
                 <a class="nav-link" href="{% url 'gameconsole'%}">
                     <div class="sb-nav-link-icon"><i class="fas fa-gamepad"></i></div>
-                    Play Game
+                    Play
                 </a>
                 {% endif %}
                 <div class="sb-sidenav-menu-heading">Reports</div>
@@ -69,6 +69,16 @@
                 <a class="nav-link" href="{% url 'transactionlog'%}">
                     <div class="sb-nav-link-icon"><i class="fas fa-receipt"></i></div>
                     Transaction Logs
+                </a>
+                {% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'stockist' %}
+                <a class="nav-link" href="{% url 'gameresult'%}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                    Game Result
+                </a>
+                {% endif %}
+                <a class="nav-link" href="{% url 'gameearning'%}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-rupee-sign"></i></div>
+                    Game Earning
                 </a>
                 <!-- <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="false" aria-controls="collapsePages">
@@ -105,8 +115,8 @@
             </div>
         </div>
         <div class="sb-sidenav-footer">
-            <div class="small">Logged in as:</div>
-            {{request.user}}
+            <div class="small">Login time:</div>
+            {{request.user.last_login}}
         </div>
     </nav>
 </div>

@@ -23,15 +23,16 @@
                                             <div class="col-md-5">
                                                 <div class="form-group">
                                                     <label>All Stockist</label>
-                                                    <select class="form-control" name="stockistusername" onchange="updateRetailer()"
-                                                        id="stockistusername" data-placeholder="Select stockist"
-                                                        data-allow-clear="1">
+                                                    <select class="form-control" name="stockistusername"
+                                                        onchange="updateRetailer()" id="stockistusername"
+                                                        data-placeholder="Select stockist" data-allow-clear="1">
                                                         <option></option>
                                                         {% for i in stockist_retailer_mappping %}
                                                         <option>{{i}}</option>
                                                         {% endfor %}
                                                     </select>
-                                                    <small class="form-text text-muted">Select stockist to filter retailers</small>
+                                                    <small class="form-text text-muted">Select stockist to filter
+                                                        retailers</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -47,7 +48,8 @@
                                                         <option>{{i}}</option>
                                                         {% endfor %}
                                                     </select>
-                                                    <small class="form-text text-muted">Select retailer which is to be updated</small>
+                                                    <small class="form-text text-muted">Select retailer which is to be
+                                                        updated</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -69,7 +71,8 @@
                                                         <option>8</option>
                                                         <option>9</option>
                                                     </select>
-                                                    <small class="form-text text-muted">Select winx for the retailer</small>
+                                                    <small class="form-text text-muted">Select winx for the
+                                                        retailer</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -77,9 +80,10 @@
                                             <div class="col-md-5">
                                                 <div class="form-group">
                                                     <label>Enter probability</label>
-                                                    <input type="number" class="form-control" name="probability" id="probability"
-                                                        placeholder="Enter probability (%)">
-                                                    <small class="form-text text-muted">Enter probability for the retailer in %</small>
+                                                    <input type="number" class="form-control" name="probability"
+                                                        id="probability" placeholder="Enter probability (%)">
+                                                    <small class="form-text text-muted">Enter probability for the
+                                                        retailer in %</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -109,24 +113,51 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
     <script src="{% static '/js/scripts.js' %}"></script>
-    <script src="{% static '/js/select2.full.min.js' %}"></script>
     <script>
         $('select').select2({
             theme: 'bootstrap4'
         });
+        
+        $().ready(function () {
 
-    let stockist_retailer_mappping = JSON.parse("{{stockist_retailer_mappping | safe}}".replace(/'/g, '"'))
+            $("#retailerprofileform").validate({
+                rules: {
+                    stockistusername: {
+                        required: true
+                    },
+                    retailerusername: {
+                        required: true
+                    },
+                    probability: {
+                        required: true,
+                        digits: true,
+                        min: 1,
+                        max: 100
+                    },
+                    winx: {
+                        required: true,
+                    }
+                },
+                messages: {
+                    stockistusername: "(Select Stockist to select corresponding retailer)",
+                    retailerusername: "(Please select a retailer)",
+                    winx: "(Please select appopriate win number)",
+                    probability: {
+                        required: "(Enter appropriate probability)"
+                    }
+                }
+            });
+        });
 
-    let updateRetailer = function() {
-        $("#retailerusername").html('').select2({
-            theme: 'bootstrap4',
-            data: stockist_retailer_mappping[$("#stockistusername").val()]
-        })
-    }
+        let stockist_retailer_mappping = JSON.parse("{{stockist_retailer_mappping | safe}}".replace(/'/g, '"'))
+
+        let updateRetailer = function () {
+            $("#retailerusername").html('').select2({
+                theme: 'bootstrap4',
+                data: stockist_retailer_mappping[$("#stockistusername").val()]
+            })
+        }
     </script>
 </body>
 

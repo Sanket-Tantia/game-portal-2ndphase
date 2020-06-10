@@ -4,10 +4,11 @@
 
 
 <style>
-    .show{
+    .show {
         display: block;
     }
-    .hide{
+
+    .hide {
         display: none;
     }
 </style>
@@ -33,13 +34,15 @@
                                             <div class="col-md-5">
                                                 <div class="form-group">
                                                     <label>Select User Type</label>
-                                                    <select class="form-control" name="usertype" id="usertype" onchange="displayUserType()"
-                                                        data-placeholder="Select User Type" data-allow-clear="1">
+                                                    <select class="form-control" name="usertype" id="usertype"
+                                                        onchange="displayUserType()" data-placeholder="Select User Type"
+                                                        data-allow-clear="1">
                                                         <option></option>
                                                         <option>Stockist</option>
                                                         <option>Retailer</option>
                                                     </select>
-                                                    <small class="form-text text-muted">Select user type who will receive tokens.</small>
+                                                    <small class="form-text text-muted">Select user type who will
+                                                        receive tokens.</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -47,15 +50,16 @@
                                             <div class="col-md-5">
                                                 <div class="form-group">
                                                     <label>All Stockist</label>
-                                                    <select class="form-control" name="stockistusername" onchange="updateToken('stockist')"
-                                                        id="stockistusername" data-placeholder="Select stockist"
-                                                        data-allow-clear="1">
+                                                    <select class="form-control" name="stockistusername"
+                                                        onchange="updateToken('stockist')" id="stockistusername"
+                                                        data-placeholder="Select stockist" data-allow-clear="1">
                                                         <option></option>
                                                         {% for i in allstockists %}
                                                         <option>{{i}}</option>
                                                         {% endfor %}
                                                     </select>
-                                                    <small class="form-text text-muted">Select stockist to issue token</small>
+                                                    <small class="form-text text-muted">Select stockist to issue
+                                                        token</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -67,7 +71,8 @@
                                                     <label>My Tokens</label>
                                                     <input type="number" class="form-control" name="my_tokens_amount"
                                                         id="my_tokens_amount" value="{{stockist_token}}" readonly>
-                                                    <small class="form-text text-muted">Maximum Tokens which can be issued by me.</small>
+                                                    <small class="form-text text-muted">Maximum Tokens which can be
+                                                        issued by me.</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -76,15 +81,16 @@
                                             <div class="col-md-5">
                                                 <div class="form-group">
                                                     <label>All Retailer</label>
-                                                    <select class="form-control" name="retailerusername" onchange="updateToken('retailer')"
-                                                        id="retailerusername" data-placeholder="Select retailer"
-                                                        data-allow-clear="1">
+                                                    <select class="form-control" name="retailerusername"
+                                                        onchange="updateToken('retailer')" id="retailerusername"
+                                                        data-placeholder="Select retailer" data-allow-clear="1">
                                                         <option></option>
                                                         {% for i in allretailers %}
                                                         <option>{{i}}</option>
                                                         {% endfor %}
                                                     </select>
-                                                    <small class="form-text text-muted">Select retailer to issue token</small>
+                                                    <small class="form-text text-muted">Select retailer to issue
+                                                        token</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -92,9 +98,11 @@
                                             <div class="col-md-5">
                                                 <div class="form-group">
                                                     <label>Currently Available Tokens</label>
-                                                    <input type="number" class="form-control" name="current_token_amount"
-                                                        id="current_token_amount" placeholder="Updated after selecting user" readonly>
-                                                    <small class="form-text text-muted">Tokens selected user currently has.</small>
+                                                    <input type="number" class="form-control"
+                                                        name="current_token_amount" id="current_token_amount"
+                                                        placeholder="Updated after selecting user" readonly>
+                                                    <small class="form-text text-muted">Tokens selected user currently
+                                                        has.</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -104,7 +112,8 @@
                                                     <label>Token Amount</label>
                                                     <input type="number" class="form-control" name="token_amount"
                                                         id="token_amount" placeholder="Enter amount">
-                                                    <small class="form-text text-muted">No. of token to be credited</small>
+                                                    <small class="form-text text-muted">No. of token to be
+                                                        credited</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -133,21 +142,47 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
     <script src="{% static '/js/scripts.js' %}"></script>
-    <script src="{% static '/js/select2.full.min.js' %}"></script>
     <script>
         $('select').select2({
             theme: 'bootstrap4',
+        });
+
+        issuable_tokens = Number($("#my_tokens_amount").val())
+        if (Number.isNaN(issuable_tokens)){
+            issuable_tokens = 100000
+        }
+
+        $().ready(function () {
+            $("#granttokenform").validate({
+                rules: {
+                    stockistusername: {
+                        required: true
+                    },
+                    retailerusername: {
+                        required: true
+                    },
+                    token_amount: {
+                        required: true,
+                        min: 1,
+                        max: issuable_tokens
+                    }
+                },
+                messages: {
+                    stockistusername: "(Select Stockist to add tokens)",
+                    retailerusername: "(Select Retailer to add tokens)",
+                    token_amount: {
+                        required: "(Please enter token amount)"
+                    }
+                }
+            });
         });
 
         let user_role = "{{user.groups.all.0.name}}"
         let allretailers = JSON.parse("{{allretailers | safe}}".replace(/'/g, '"'))
         let allstockists;
 
-        if(user_role == 'stockist'){
+        if (user_role == 'stockist') {
             $("#stockistDisplay").addClass("hide");
             $("#retailerDisplay").removeClass("hide");
             $(".always").removeClass("hide");
@@ -156,20 +191,20 @@
             allstockists = JSON.parse("{{allstockists | safe}}".replace(/'/g, '"'))
         }
 
-        let updateToken = function(usertype){
-            if (usertype == 'stockist'){
+        let updateToken = function (usertype) {
+            if (usertype == 'stockist') {
                 $("#current_token_amount").val(allstockists[$("#stockistusername").val()])
             } else {
                 $("#current_token_amount").val(allretailers[$("#retailerusername").val()])
             }
         }
 
-        let displayUserType = function(){
-            if ($("#usertype").val() == 'Stockist'){
+        let displayUserType = function () {
+            if ($("#usertype").val() == 'Stockist') {
                 $("#retailerDisplay").addClass("hide");
                 $("#stockistDisplay").removeClass("hide");
                 $(".always").removeClass("hide");
-            } else if ($("#usertype").val() == 'Retailer'){
+            } else if ($("#usertype").val() == 'Retailer') {
                 $("#stockistDisplay").addClass("hide");
                 $("#retailerDisplay").removeClass("hide");
                 $(".always").removeClass("hide");

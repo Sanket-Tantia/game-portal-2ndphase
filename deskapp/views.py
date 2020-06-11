@@ -38,9 +38,9 @@ from .models import (
 )
 
 # default libs
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import defaultdict
-import json
+import json, pytz
 
 # Create your views here.
 @isathenticated_user
@@ -79,6 +79,33 @@ def dashboardView(request):
     context['total_blk_stockist'] = User.objects.filter(groups__name='stockist', is_active=0).count()
     context['total_blk_retailer'] = User.objects.filter(groups__name='retailer', is_active=0).count()
 
+    queryset = GameRound.objects.filter(created_date__gte=datetime.now(pytz.timezone('Asia/Kolkata'))-timedelta(days=7))
+    last_game_result, commission_chart, netpay_chart = [], defaultdict(float), defaultdict(float)
+    for each_game in queryset:
+        last_game_result.append({
+            'username': each_game.username.username,
+            'tokens_playing_for': each_game.tokens_playing_for,
+            'tokens_won': each_game.tokens_won,
+            'tokens_remaining': each_game.tokens_remaining,
+            'won_on_number': each_game.won_on_number,
+            'is_jackpot': each_game.is_jackpot,
+            'transaction_date': each_game.created_date.strftime("%b %d, %Y"),
+        })
+
+        commission_chart[each_game.created_date.strftime("%b %d")] +=  each_game.tokens_playing_for * 0.05
+        netpay_chart[each_game.created_date.strftime("%b %d")] += each_game.tokens_playing_for * .95 - each_game.tokens_won
+
+    commission_chart['Jun 10'] =  66.55
+    commission_chart['Jun 11'] =  21
+
+    netpay_chart['Jun 10'] =  72.09
+    netpay_chart['Jun 11'] =  49
+
+    context['labels'] = ','.join(commission_chart.keys())
+    context['last_game_result'] = last_game_result
+    context['commission_chart_values'] = ','.join(map(lambda x: str(round(x,2)), commission_chart.values()))
+    context['netpay_chart_values'] = ','.join(map(lambda x: str(round(x,2)), netpay_chart.values()))
+
     return render(request, 'deskapp/dashboard.html', context)
 
 
@@ -94,7 +121,7 @@ def logoutView(request):
             token_play_log_form = TokenPlayLogForm({
                 'retailer': request.user.id,
                 'token_amount': -granted_token,
-                'remarks': "Credited remaining granted tokens to available tokens when log out"
+                'remarks': "Remaining tokens added to total available tokens when log out"
             })
             if token_play_log_form.is_valid():
                 token_play_log_form.save()
@@ -436,7 +463,7 @@ def gameConsoleView(request):
         token_play_log_form = TokenPlayLogForm({
             'retailer': request.user.id,
             'token_amount': request.POST.get('token_amount'),
-            'remarks': "Tokens granted from the website portal"
+            'remarks': "Tokens granted from dashboard"
         })
         if token_play_log_form.is_valid():
             token_play_log_form.save()
@@ -473,7 +500,6 @@ def gameConsoleView(request):
 def gameResultView(request):
     context = {}
 
-    # queryset = GameRound.objects.all().order_by('username')
     retailers_game_history = {}
     if request.user.groups.all()[0].name == 'admin':
         queryset = GameRound.objects.values('username').annotate(
@@ -510,12 +536,12 @@ def gameEarningView(request):
     all_game_earning = []
 
     if request.user.groups.all()[0].name == 'admin':
-        queryset = GameRound.objects.all()
+        queryset = GameRound.objects.all().order_by('-created_date')
     elif request.user.groups.all()[0].name == 'stockist':
         myretailers = [i.retailer_id.id for i in RetailerMapping.objects.filter(stockist_id=request.user.id)]
-        queryset = GameRound.objects.filter(username__in=myretailers)
+        queryset = GameRound.objects.filter(username__in=myretailers).order_by('-created_date')
     else:
-        queryset = GameRound.objects.filter(username=request.user.id)
+        queryset = GameRound.objects.filter(username=request.user.id).order_by('-created_date')
 
     for each_game in queryset:
         all_game_earning.append({
@@ -541,4 +567,3 @@ def gameEarningView(request):
 
 # TASKS LEFT
 # success form message
-# admin dashboard

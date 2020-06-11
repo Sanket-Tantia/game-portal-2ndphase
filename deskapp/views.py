@@ -57,10 +57,12 @@ def loginView(request):
             login(request, user)
             if request.user.groups.exists():
                 group = request.user.groups.all()[0].name
-                if group == 'retailer':
-                    return redirect('gameconsole')
-                else:
+                if group == 'admin':
                     return redirect('dashboard')
+                elif group == 'stockist':
+                    return redirect('userinfo')
+                else:
+                    return redirect('gameconsole')
         else:
             messages.info(request, 'Username or password is incorrect')
 
@@ -68,7 +70,7 @@ def loginView(request):
 
 
 @login_required(login_url='login')
-@authorized_user(allowed_roles=['admin','stockist'])
+@authorized_user(allowed_roles=['admin'])
 def dashboardView(request):
     context = {}
 
@@ -82,9 +84,29 @@ def dashboardView(request):
 
 @login_required(login_url='login')
 def logoutView(request):
+    if request.user.groups.all()[0].name == 'retailer':
+        try:
+            granted_token = GrantedToken.objects.get(pk=request.session._session_key).token_amount
+        except GrantedToken.DoesNotExist:
+            granted_token = 0
+
+        if granted_token>0:
+            token_play_log_form = TokenPlayLogForm({
+                'retailer': request.user.id,
+                'token_amount': -granted_token,
+                'remarks': "Credited remaining granted tokens to available tokens when log out"
+            })
+            if token_play_log_form.is_valid():
+                token_play_log_form.save()
+            else:
+                print("Token play log form is not valid", token_play_log_form.erros)
+
+            retailer_token_obj = AvailableToken.objects.get(pk=request.user.id)
+            retailer_token_obj.token_amount += granted_token
+            retailer_token_obj.save()
+
     logout(request)
-    response = redirect('login')
-    return response
+    return redirect('login')
 
 
 @login_required(login_url='login')
@@ -345,6 +367,7 @@ def transactionLogView(request):
         allplaytokens.append({
             'retailer': pt.retailer.username,
             'token_amount': pt.token_amount,
+            'remarks': pt.remarks,
             'transaction_date': pt.transaction_date.strftime("%b %d, %Y")
         })
         
@@ -412,7 +435,8 @@ def gameConsoleView(request):
 
         token_play_log_form = TokenPlayLogForm({
             'retailer': request.user.id,
-            'token_amount': request.POST.get('token_amount')
+            'token_amount': request.POST.get('token_amount'),
+            'remarks': "Tokens granted from the website portal"
         })
         if token_play_log_form.is_valid():
             token_play_log_form.save()
@@ -516,7 +540,5 @@ def gameEarningView(request):
 
 
 # TASKS LEFT
-# Validation in all forms
-# Add one account report
-# Logout credit back with remarks
-# seleect related when getting my retailer
+# success form message
+# admin dashboard

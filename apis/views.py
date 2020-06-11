@@ -67,6 +67,7 @@ class UserRefillTokenView(APIView):
         playLogData = {
             'retailer': request.data.get('username'),
             'token_amount': request.data.get('token_amount'),
+            'remarks': "Tokens refilled from game console"
         }
 
         granted_token_obj = GrantedToken.objects.get(pk=request.data.get('session'))

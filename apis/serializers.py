@@ -11,4 +11,4 @@ class GameRoundSerializer(serializers.ModelSerializer):
 class TokenPlayLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = TokenPlayLog
-        fields = ('retailer', 'token_amount')
+        fields = ('retailer', 'token_amount', 'remarks')

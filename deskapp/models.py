@@ -46,6 +46,7 @@ class AvailableToken(models.Model):
 class TokenPlayLog(models.Model):
     retailer = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     token_amount = models.IntegerField()
+    remarks = models.CharField(max_length=255)
     transaction_date = models.DateTimeField(auto_now_add=True)
 
 

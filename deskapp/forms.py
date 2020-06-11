@@ -44,7 +44,7 @@ class AvailableTokenForm(forms.ModelForm):
 class TokenPlayLogForm(forms.ModelForm):
     class Meta:
         model = TokenPlayLog
-        fields = ['retailer', 'token_amount']
+        fields = ['retailer', 'token_amount', 'remarks']
 
 
 class GrantedTokenForm(forms.ModelForm):

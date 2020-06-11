@@ -2,11 +2,13 @@
     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
         <div class="sb-sidenav-menu">
             <div class="nav">
-                {% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'stockist' %}
+                {% if user.groups.all.0.name == 'admin' %}
                 <div class="sb-sidenav-menu-heading">Home</div>
                 <a class="nav-link" href="{% url 'dashboard' %}">
                     <div class="sb-nav-link-icon"><i class="fab fa-dashcube"></i></div>Dashboard
                 </a>
+                {% endif %}
+                {% if user.groups.all.0.name == 'admin' or user.groups.all.0.name == 'stockist' %}
                 <div class="sb-sidenav-menu-heading">User</div>
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts"
                     aria-expanded="false" aria-controls="collapseLayouts">

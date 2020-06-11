@@ -6,8 +6,10 @@ def isathenticated_user(actual_func):
     def inner_func(request, *args, **kwargs):
         if request.user.is_authenticated:
             if request.user.groups.exists():
-                if request.user.groups.all()[0].name == 'admin' or request.user.groups.all()[0].name == 'stockist':
+                if request.user.groups.all()[0].name == 'admin':
                     return redirect('dashboard')
+                elif request.user.groups.all()[0].name == 'stockist':
+                    return redirect('userinfo')
                 else:
                     return redirect('gameconsole')
         else:

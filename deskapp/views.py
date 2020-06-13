@@ -95,11 +95,11 @@ def dashboardView(request):
         commission_chart[each_game.created_date.strftime("%b %d")] +=  each_game.tokens_playing_for * 0.05
         netpay_chart[each_game.created_date.strftime("%b %d")] += each_game.tokens_playing_for * .95 - each_game.tokens_won
 
-    commission_chart['Jun 10'] =  66.55
-    commission_chart['Jun 11'] =  21
+    # commission_chart['Jun 10'] =  66.55
+    # commission_chart['Jun 11'] =  21
 
-    netpay_chart['Jun 10'] =  72.09
-    netpay_chart['Jun 11'] =  49
+    # netpay_chart['Jun 10'] =  72.09
+    # netpay_chart['Jun 11'] =  49
 
     context['labels'] = ','.join(commission_chart.keys())
     context['last_game_result'] = last_game_result

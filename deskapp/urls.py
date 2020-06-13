@@ -30,5 +30,5 @@ urlpatterns = [
     path('gameresult', gameResultView, name='gameresult'),
     path('gameearning', gameEarningView, name='gameearning'),
     path('logout', logoutView, name='logout'),
-    re_path(r'^.*$', TemplateView.as_view(template_name='deskapp/404.html')),
+    re_path(r'^(?!admin).*', TemplateView.as_view(template_name='deskapp/404.html'))
 ]

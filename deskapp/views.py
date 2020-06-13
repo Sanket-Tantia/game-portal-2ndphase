@@ -111,26 +111,26 @@ def dashboardView(request):
 
 @login_required(login_url='login')
 def logoutView(request):
-    if request.user.groups.all()[0].name == 'retailer':
-        try:
-            granted_token = GrantedToken.objects.get(pk=request.session._session_key).token_amount
-        except GrantedToken.DoesNotExist:
-            granted_token = 0
+    # if request.user.groups.all()[0].name == 'retailer':
+    #     try:
+    #         granted_token = GrantedToken.objects.get(pk=request.session._session_key).token_amount
+    #     except GrantedToken.DoesNotExist:
+    #         granted_token = 0
 
-        if granted_token>0:
-            token_play_log_form = TokenPlayLogForm({
-                'retailer': request.user.id,
-                'token_amount': -granted_token,
-                'remarks': "Remaining tokens added to total available tokens when log out"
-            })
-            if token_play_log_form.is_valid():
-                token_play_log_form.save()
-            else:
-                print("Token play log form is not valid", token_play_log_form.erros)
+    #     if granted_token>0:
+    #         token_play_log_form = TokenPlayLogForm({
+    #             'retailer': request.user.id,
+    #             'token_amount': -granted_token,
+    #             'remarks': "Remaining tokens added to total available tokens when log out"
+    #         })
+    #         if token_play_log_form.is_valid():
+    #             token_play_log_form.save()
+    #         else:
+    #             print("Token play log form is not valid", token_play_log_form.erros)
 
-            retailer_token_obj = AvailableToken.objects.get(pk=request.user.id)
-            retailer_token_obj.token_amount += granted_token
-            retailer_token_obj.save()
+    #         retailer_token_obj = AvailableToken.objects.get(pk=request.user.id)
+    #         retailer_token_obj.token_amount += granted_token
+    #         retailer_token_obj.save()
 
     logout(request)
     return redirect('login')
@@ -552,8 +552,8 @@ def gameEarningView(request):
             'won_on_number': each_game.won_on_number,
             'is_jackpot': each_game.is_jackpot,
             'transaction_date': each_game.created_date.strftime("%b %d, %Y"),
-            'commission': each_game.tokens_playing_for * 0.05,
-            'net_pay': each_game.tokens_playing_for * .95 - each_game.tokens_won
+            'commission': "{:.2f}%".format(each_game.tokens_playing_for * 0.05),
+            'net_pay': "{:.2f}%".format(each_game.tokens_playing_for * .95 - each_game.tokens_won)
         })
     context['all_game_earning'] = all_game_earning
 

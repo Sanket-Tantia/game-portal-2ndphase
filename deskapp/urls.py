@@ -1,5 +1,4 @@
-from django.urls import path, re_path
-from django.views.generic import TemplateView
+from django.urls import path
 
 from .views import (
     loginView,
@@ -29,6 +28,5 @@ urlpatterns = [
     path('gameconsole', gameConsoleView, name='gameconsole'),
     path('gameresult', gameResultView, name='gameresult'),
     path('gameearning', gameEarningView, name='gameearning'),
-    path('logout', logoutView, name='logout'),
-    re_path(r'^(?!admin).*', TemplateView.as_view(template_name='deskapp/404.html'))
+    path('logout', logoutView, name='logout')
 ]

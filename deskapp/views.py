@@ -550,10 +550,10 @@ def gameEarningView(request):
             'tokens_won': each_game.tokens_won,
             'tokens_remaining': each_game.tokens_remaining,
             'won_on_number': each_game.won_on_number,
-            'is_jackpot': each_game.is_jackpot,
+            'is_jackpot': 'Won' if each_game.is_jackpot else 'Lost',
             'transaction_date': each_game.created_date.strftime("%b %d, %Y"),
-            'commission': "{:.2f}%".format(each_game.tokens_playing_for * 0.05),
-            'net_pay': "{:.2f}%".format(each_game.tokens_playing_for * .95 - each_game.tokens_won)
+            'commission': "{:.2f}".format(each_game.tokens_playing_for * 0.05),
+            'net_pay': "{:.2f}".format(each_game.tokens_playing_for * .95 - each_game.tokens_won)
         })
     context['all_game_earning'] = all_game_earning
 

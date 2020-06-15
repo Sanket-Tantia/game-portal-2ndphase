@@ -14,10 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', include('deskapp.urls')),
     path('', include('apis.urls')),
     path('admin/', admin.site.urls),
+    re_path(r'^(?!admin).*', TemplateView.as_view(template_name='deskapp/404.html'))
 ]

@@ -91,7 +91,7 @@
                                             <td>{{each_game.tokens_playing_for}}</td>
                                             <td>{{each_game.tokens_won}}</td>
                                             <td>{{each_game.tokens_remaining}}</td>
-                                            {% if each_value.won_on_number == -90 %}
+                                            {% if each_game.won_on_number == -90 %}
                                             <td>--</td>
                                             {% else %}
                                             <td>{{each_game.won_on_number}}</td>

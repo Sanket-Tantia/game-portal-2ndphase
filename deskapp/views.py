@@ -238,7 +238,7 @@ def userInfoView(request):
         all_users.append({
             'username': user.username.username,
             'fullname': user.fullname,
-            'email':user.username.email,
+            'email':user.username.email if user.username.email else '--',
             'category': user.username.groups.all()[0].name,
             'balance': AvailableToken.objects.get(pk=user.username.id).token_amount,
             'winx': user.winx if user.winx else '--',
@@ -246,7 +246,7 @@ def userInfoView(request):
             'last_login': user.username.last_login.strftime("%b %d, %Y") if user.username.last_login else None,
             'status': 'Blocked' if user.username.is_active == 0 else "Active",
             'date_joined': user.username.date_joined.strftime("%b %d, %Y"),
-            'phone': user.phone,
+            'phone': user.phone if user.phone else '--',
             'city': user.city,
             'state': user.state
         })

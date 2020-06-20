@@ -86,7 +86,7 @@
                                                 <div class="form-group">
                                                     <label>Email address</label>
                                                     <input type="email" class="form-control" name="email" id="email"
-                                                        placeholder="Enter email...">
+                                                        placeholder="Enter email..." disabled>
                                                     <small class="form-text text-muted">Enter a valid email
                                                         address</small>
                                                 </div>
@@ -96,7 +96,7 @@
                                                 <div class="form-group">
                                                     <label>Phone No.</label>
                                                     <input type="text" class="form-control" name="phone" id="phone"
-                                                        placeholder="Enter phone no.">
+                                                        placeholder="Enter phone no." disabled>
                                                     <small class="form-text text-muted">Ten digit phone number without
                                                         +91</small>
                                                 </div>
@@ -215,16 +215,16 @@
                         required: true,
                         equalTo: "#password1"
                     },
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    phone: {
-                        required: true,
-                        number: true,
-                        maxlength: 10,
-                        minlength:10
-                    },
+                    // email: {
+                    //     required: true,
+                    //     email: true
+                    // },
+                    // phone: {
+                    //     required: true,
+                    //     number: true,
+                    //     maxlength: 10,
+                    //     minlength:10
+                    // },
                     probability: {
                         digits: true,
                         min: 1,
@@ -251,8 +251,8 @@
                         required: "(Please provide a password)",
                         equalTo: "(Please enter the same password as above)"
                     },
-                    email: "(Please enter a valid email address)",
-                    phone: "(Please enter a valid phone number)",
+                    // email: "(Please enter a valid email address)",
+                    // phone: "(Please enter a valid phone number)",
                     city: "(Please provide a City)",
                     state: "(Please select a State)"
                 }

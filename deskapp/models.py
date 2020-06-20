@@ -7,7 +7,7 @@ from datetime import datetime
 class Profile(models.Model):
     username = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     fullname = models.CharField(max_length=255)
-    phone = models.CharField(max_length=10)
+    phone = models.CharField(max_length=10, blank=True, null=True)
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=255)
     winx = models.IntegerField(blank=True, null=True)

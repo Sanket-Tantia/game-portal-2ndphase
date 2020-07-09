@@ -167,8 +167,8 @@ def createUserView(request, category):
                     'username': created_user.id,
                     'fullname': request.POST.get('fullname'),
                     'phone': request.POST.get('phone'),
-                    'city': request.POST.get('city'),
-                    'state': request.POST.get('state'),
+                    'city': 'default', #request.POST.get('city'),
+                    'state': 'default' #request.POST.get('state'),
                 })
 
                 if profile_form.is_valid():

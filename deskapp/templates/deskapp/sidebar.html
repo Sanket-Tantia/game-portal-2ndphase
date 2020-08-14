@@ -29,6 +29,19 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-id-card"></i></div>
                     Retailer Profile
                 </a>
+                {% if user.groups.all.0.name == 'admin' %}
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#manulEntryGame"
+                    aria-expanded="false" aria-controls="manulEntryGame">
+                    <div class="sb-nav-link-icon"><i class="fas fa-plus-circle"></i></div>
+                    Manual Entry
+                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                </a>
+                <div class="collapse" id="manulEntryGame" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav">
+                        <a class="nav-link">Star Casino</a>
+                    </nav>
+                </div>
+                {% endif %}
                 {% endif %}
                 <a class="nav-link" href="{% url 'blockuser'%}">
                     <div class="sb-nav-link-icon"><i class="fas fa-user-lock"></i></div>
@@ -79,7 +92,7 @@
                 </a>
                 <a class="nav-link" href="{% url 'gameearning'%}">
                     <div class="sb-nav-link-icon"><i class="fas fa-rupee-sign"></i></div>
-                    Game Earning
+                    Stockist Sales Report
                 </a>
                 {% endif %}
                 {% if user.groups.all.0.name == 'retailer' %}

@@ -89,7 +89,7 @@ def dashboardView(request):
             'tokens_remaining': each_game.tokens_remaining,
             'won_on_number': each_game.won_on_number,
             'is_jackpot': each_game.is_jackpot,
-            'transaction_date': each_game.created_date.strftime("%b %d, %Y"),
+            'transaction_date': each_game.created_date,
         })
 
         commission_chart[each_game.created_date.strftime("%b %d")] +=  each_game.tokens_playing_for * 0.05
@@ -243,9 +243,9 @@ def userInfoView(request):
             'balance': AvailableToken.objects.get(pk=user.username.id).token_amount,
             'winx': user.winx if user.winx else '--',
             'probability': f"{user.probability}%" if user.probability else '--',
-            'last_login': user.username.last_login.strftime("%b %d, %Y") if user.username.last_login else None,
+            'last_login': user.username.last_login if user.username.last_login else None,
             'status': 'Blocked' if user.username.is_active == 0 else "Active",
-            'date_joined': user.username.date_joined.strftime("%b %d, %Y"),
+            'date_joined': user.username.date_joined,
             'phone': user.phone if user.phone else '--',
             'city': user.city,
             'state': user.state
@@ -375,7 +375,7 @@ def transactionLogView(request):
                 'receiver': transaction.receiver_id.username,
                 'receiver_type': transaction.receiver_id.groups.all()[0].name,
                 'token_amount': transaction.token_amount,
-                'transaction_date': transaction.transaction_date.strftime("%b %d, %Y")
+                'transaction_date': transaction.transaction_date
             })
 
     # all retailers for admin or only stockist retailers or retailer personal
@@ -386,7 +386,7 @@ def transactionLogView(request):
             'receiver': transaction.receiver_id.username,
             'receiver_type': transaction.receiver_id.groups.all()[0].name,
             'token_amount': transaction.token_amount,
-            'transaction_date': transaction.transaction_date.strftime("%b %d, %Y")
+            'transaction_date': transaction.transaction_date
         })
 
     # all retailers play for admin or only stockist retailers play or retailer play personal
@@ -395,7 +395,7 @@ def transactionLogView(request):
             'retailer': pt.retailer.username,
             'token_amount': pt.token_amount,
             'remarks': pt.remarks,
-            'transaction_date': pt.transaction_date.strftime("%b %d, %Y")
+            'transaction_date': pt.transaction_date
         })
         
 
@@ -551,7 +551,7 @@ def gameEarningView(request):
             'tokens_remaining': each_game.tokens_remaining,
             'won_on_number': each_game.won_on_number,
             'is_jackpot': 'Won' if each_game.is_jackpot else 'Lost',
-            'transaction_date': each_game.created_date.strftime("%b %d, %Y"),
+            'transaction_date': each_game.created_date,
             'commission': "{:.2f}".format(each_game.tokens_playing_for * 0.05),
             'net_pay': "{:.2f}".format(each_game.tokens_playing_for * .95 - each_game.tokens_won)
         })

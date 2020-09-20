@@ -495,6 +495,7 @@ def gameConsoleView(request):
 
     return render(request, 'deskapp/game_console.html', context)
 
+
 @login_required(login_url='login')
 @authorized_user(allowed_roles=['admin','stockist'])
 def gameResultView(request):
@@ -565,5 +566,19 @@ def gameEarningView(request):
     return render(request, 'deskapp/game_earning.html', context)
 
 
-# TASKS LEFT
-# success form message
+@login_required(login_url='login')
+@authorized_user(allowed_roles=['admin'])
+def manualEntryView(request):
+    context = {}
+
+    if request.method == 'POST':
+        print(request.POST)
+
+        global_probability = request.POST.get('probability')
+        allRetailers = RetailerMapping.objects.all().values('retailer_id')
+        print(allRetailers)
+        Profile.objects.filter(username__in=allRetailers).update(probability=global_probability)
+
+        return HttpResponseRedirect('manualentry')
+
+    return render(request, 'deskapp/manual_entry.html', context)
